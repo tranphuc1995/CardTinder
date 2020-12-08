@@ -1,0 +1,3 @@
+include ':home_page'
+include ':app'
+rootProject.name = "GoJekTest"
