@@ -1,3 +1,6 @@
+include ':di'
+include ':data'
+include ':domain'
 include ':home_page'
 include ':app'
 rootProject.name = "GoJekTest"

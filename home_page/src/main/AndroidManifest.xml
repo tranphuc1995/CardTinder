@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.team.home_page">
+    package="com.tranphuc.home_page">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <application>
-
-        <activity android:name=".HomePageActivity"></activity>
+    <application android:usesCleartextTraffic="true">
+        <activity android:name="com.tranphuc.home_page.HomePageActivity"></activity>
     </application>
 
 </manifest>
