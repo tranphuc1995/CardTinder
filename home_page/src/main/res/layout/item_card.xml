@@ -26,6 +26,7 @@
                 app:cardCornerRadius="@dimen/_35sdp">
 
                 <ImageView
+                    android:contentDescription="@string/description_avatar"
                     android:id="@+id/ivAvatar"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -43,7 +44,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:text="Demo"
+                    android:text="@string/demo"
                     android:textColor="@color/colorBlack50"
                     android:textSize="@dimen/_14ssp" />
 
@@ -56,7 +57,7 @@
                     android:layout_marginTop="@dimen/_5sdp"
                     android:layout_marginRight="@dimen/_10sdp"
                     android:gravity="center"
-                    android:text="Demo"
+                    android:text="@string/demo"
                     android:textColor="@color/colorBlack"
                     android:textSize="@dimen/_18ssp" />
             </LinearLayout>
@@ -78,7 +79,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="@dimen/_20sdp"
-                android:orientation="horizontal"></LinearLayout>
+                android:orientation="horizontal"/>
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 </RelativeLayout>

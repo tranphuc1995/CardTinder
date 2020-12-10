@@ -3,4 +3,8 @@
     <string name="my_birthday_is">My birthday is</string>
     <string name="my_address_is">My address is</string>
     <string name="my_phone_is">My phone is</string>
+    <string name="description_avatar">Show avatar user</string>
+    <string name="description_icon">Show icon information</string>
+    <string name="demo">Demo</string>
+    <string name="loading">Loading…</string>
 </resources>

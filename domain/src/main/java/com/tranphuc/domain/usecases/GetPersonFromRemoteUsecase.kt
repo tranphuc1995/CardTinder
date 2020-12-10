@@ -5,6 +5,6 @@ import com.tranphuc.domain.repository.PersonRepository
 
 class GetPersonFromRemoteUsecase(val personRepository: PersonRepository) {
     suspend fun excute(): Person{
-        return personRepository.getListPersonFromRemote()
+        return personRepository.getPersonFromRemote()
     }
 }

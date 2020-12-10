@@ -11,6 +11,7 @@ import com.bumptech.glide.Glide
 import com.tranphuc.home_page.R
 import com.tranphuc.home_page.model.ItemCard
 import com.tranphuc.home_page.model.ItemPerson
+import com.tranphuc.home_page.utils.DateUtils
 import kotlinx.android.synthetic.main.item_card.view.*
 
 class CardAdapter(var listItemCard: MutableList<ItemCard>) :
@@ -82,7 +83,7 @@ class CardAdapter(var listItemCard: MutableList<ItemCard>) :
                 1 -> {
                     itemView.tvFirstContent.text =
                         itemView.context.resources.getString(R.string.my_birthday_is)
-                    itemView.tvSecondContent.text = itemPerson.birthDay
+                    itemView.tvSecondContent.text = DateUtils.formatLongToDate(itemPerson.birthDay * 1000)
                 }
                 2 -> {
                     itemView.tvFirstContent.text =

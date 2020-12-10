@@ -1,20 +1,27 @@
 package com.tranphuc.home_page.viewmodel
 
-import android.util.Log
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.RecyclerView
+import com.tranphuc.domain.usecases.GetListPersonFromRoomUsecase
 import com.tranphuc.domain.usecases.GetPersonFromRemoteUsecase
+import com.tranphuc.domain.usecases.SavePersonToRoomUsecase
 import com.tranphuc.home_page.adapter.CardAdapter
 import com.tranphuc.home_page.mapper.PersonToItemPerson
 import com.tranphuc.home_page.model.ItemCard
+import com.tranphuc.home_page.utils.NetworkUtils
 import kotlinx.coroutines.*
 
 class HomePageViewModel(
     val getPersonFromRemoteUsecase: GetPersonFromRemoteUsecase,
-    val personToItemPerson: PersonToItemPerson
+    val personToItemPerson: PersonToItemPerson,
+    val savePersonToRoomUsecase: SavePersonToRoomUsecase,
+    val getListPersonFromRoomUsecase: GetListPersonFromRoomUsecase,
+    val context: Context
 ) : ViewModel() {
+
     private var mIsUserScrollLeft = false
     private var mCurrentRvPosition = 0
     private var mListItemCard: MutableList<ItemCard> = ArrayList()
@@ -22,6 +29,7 @@ class HomePageViewModel(
 
     private var mLiveDataListItemCard: MutableLiveData<List<ItemCard>> = MutableLiveData()
     private var mLiveDataCircularScrollRv: MutableLiveData<Int> = MutableLiveData()
+    private var mLiveDataShowToast: MutableLiveData<String> = MutableLiveData()
 
     fun getLiveDataListItemCard(): LiveData<List<ItemCard>> {
         return mLiveDataListItemCard
@@ -31,13 +39,23 @@ class HomePageViewModel(
         return mLiveDataCircularScrollRv
     }
 
+    fun getLiveDataShowToast(): LiveData<String> {
+        return mLiveDataShowToast
+    }
+
     fun getListItemCard() {
-        mListItemCard.add(ItemCard(CardAdapter.TYPE_LOADING))
-        mListItemCard.add(ItemCard(CardAdapter.TYPE_LOADING))
-        mListItemCard.add(ItemCard(CardAdapter.TYPE_LOADING))
-        mLiveDataListItemCard.value = mListItemCard
-        mLiveDataCircularScrollRv.value = 1
-        doUsecaseGetPersonFromRemote()
+        if (NetworkUtils.isNetworkAvailable(context)) {
+            // load data from remote
+            mListItemCard.add(ItemCard(CardAdapter.TYPE_LOADING))
+            mListItemCard.add(ItemCard(CardAdapter.TYPE_LOADING))
+            mListItemCard.add(ItemCard(CardAdapter.TYPE_LOADING))
+            mLiveDataListItemCard.value = mListItemCard
+            mLiveDataCircularScrollRv.value = 1
+            doUsecaseGetPersonFromRemote()
+        } else {
+            // load data from local
+
+        }
     }
 
 
@@ -54,13 +72,37 @@ class HomePageViewModel(
 
     fun checkScrollCircularRv(state: Int) {
         if (state == RecyclerView.SCROLL_STATE_IDLE) {
-            if (mIsUserScrollLeft) {
-                if (mCurrentRvPosition != -1 && mCurrentRvPosition != 1) {
-                    getPersonWhenUserSwipeLeft()
+            mJob = CoroutineScope(Dispatchers.IO).launch {
+                if (NetworkUtils.isNetworkAvailable(context)) {
+                    //only handle logic swipe left & right when internet is ready.
+                    if (mIsUserScrollLeft) {
+                        // get new person from remote
+                        if (mCurrentRvPosition != -1 && mCurrentRvPosition != 1) {
+                            withContext(Dispatchers.Main) {
+                                getNewPersonWhenUserSwipeRightLeft()
+                            }
+
+                        }
+                    } else {
+                        // bookmark person
+                        savePersonToRoomUsecase.excute(
+                            mListItemCard.get(1).itemPerson.id,
+                            mListItemCard.get(1).itemPerson.avatar,
+                            mListItemCard.get(1).itemPerson.name,
+                            mListItemCard.get(1).itemPerson.address,
+                            mListItemCard.get(1).itemPerson.phone,
+                            mListItemCard.get(1).itemPerson.birthDay
+                        )
+
+                        // show toast
+                        withContext(Dispatchers.Main) {
+                            mLiveDataShowToast.value =
+                                "Bookmark user: " + mListItemCard.get(1).itemPerson.name
+                            getNewPersonWhenUserSwipeRightLeft()
+                        }
+                    }
+                    delay(200)
                 }
-            }
-            CoroutineScope(Dispatchers.IO).launch {
-                delay(200)
                 withContext(Dispatchers.Main) {
                     if (mCurrentRvPosition == (mListItemCard.size - 1)) {
                         mLiveDataCircularScrollRv.value = 1
@@ -86,7 +128,7 @@ class HomePageViewModel(
         }
     }
 
-    private fun getPersonWhenUserSwipeLeft() {
+    private fun getNewPersonWhenUserSwipeRightLeft() {
         mListItemCard.set(1, ItemCard(CardAdapter.TYPE_LOADING))
         mLiveDataListItemCard.value = mListItemCard
         doUsecaseGetPersonFromRemote()

@@ -4,14 +4,14 @@ import com.tranphuc.domain.model.Person
 import com.tranphuc.home_page.R
 import com.tranphuc.home_page.model.ItemIcon
 import com.tranphuc.home_page.model.ItemPerson
-import com.tranphuc.home_page.utils.DateUtils
+
 
 class PersonToItemPerson {
     fun map(person: Person): ItemPerson {
         return ItemPerson(
             person.id,
             person.name,
-            DateUtils.formatLongToDate(person.birthDay * 1000),
+            person.birthDay,
             person.address,
             person.phone,
             person.avatar,

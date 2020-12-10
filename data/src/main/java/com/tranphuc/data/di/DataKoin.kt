@@ -4,6 +4,7 @@ object DataKoin {
     fun getModule() = listOf(
         repositoryModule,
         mapperModule,
-        networkModule
+        networkModule,
+        databaseModule
     )
 }

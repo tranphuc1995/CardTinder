@@ -2,8 +2,8 @@ package com.tranphuc.home_page
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -13,7 +13,7 @@ import com.tranphuc.home_page.viewmodel.HomePageViewModel
 import kotlinx.android.synthetic.main.activity_home_page.*
 import org.koin.android.ext.android.get
 
-class HomePageActivity : AppCompatActivity(){
+class HomePageActivity : AppCompatActivity() {
 
     val mHomePageViewModel = get<HomePageViewModel>()
     private var mCardAdapter: CardAdapter? = null
@@ -25,14 +25,14 @@ class HomePageActivity : AppCompatActivity(){
         initViews()
         addObserver()
         addEvents()
-        mHomePageViewModel?.getListItemCard()
+        mHomePageViewModel.getListItemCard()
     }
 
     private fun addEvents() {
         rvCard.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                mHomePageViewModel?.detechUserScroll(
+                mHomePageViewModel.detechUserScroll(
                     dx,
                     (recyclerView.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition()
                 )
@@ -40,18 +40,22 @@ class HomePageActivity : AppCompatActivity(){
 
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
-                mHomePageViewModel?.checkScrollCircularRv(newState)
+                mHomePageViewModel.checkScrollCircularRv(newState)
             }
         })
     }
 
     private fun addObserver() {
-        mHomePageViewModel?.getLiveDataCircularScrollRv()?.observe(this, Observer { position ->
+        mHomePageViewModel.getLiveDataCircularScrollRv().observe(this, Observer { position ->
             rvCard.scrollToPosition(position)
         })
 
-        mHomePageViewModel?.getLiveDataListItemCard()?.observe(this, Observer { listItemCard ->
+        mHomePageViewModel.getLiveDataListItemCard().observe(this, Observer { listItemCard ->
             mCardAdapter?.updateList(listItemCard)
+        })
+
+        mHomePageViewModel.getLiveDataShowToast().observe(this, Observer { content ->
+            Toast.makeText(this, content, Toast.LENGTH_SHORT).show()
         })
 
     }
