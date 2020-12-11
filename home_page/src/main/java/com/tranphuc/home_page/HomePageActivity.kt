@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.tranphuc.home_page.adapter.CardAdapter
 import com.tranphuc.home_page.model.ItemCard
+import com.tranphuc.home_page.utils.NetworkUtils
 import com.tranphuc.home_page.viewmodel.HomePageViewModel
 import kotlinx.android.synthetic.main.activity_home_page.*
 import org.koin.android.ext.android.get
@@ -25,6 +26,7 @@ class HomePageActivity : AppCompatActivity() {
         initViews()
         addObserver()
         addEvents()
+        mHomePageViewModel.updateStateNetwork(NetworkUtils.isNetworkAvailable(this))
         mHomePageViewModel.getListItemCard()
     }
 
@@ -57,7 +59,6 @@ class HomePageActivity : AppCompatActivity() {
         mHomePageViewModel.getLiveDataShowToast().observe(this, Observer { content ->
             Toast.makeText(this, content, Toast.LENGTH_SHORT).show()
         })
-
     }
 
     private fun initViews() {
@@ -65,7 +66,7 @@ class HomePageActivity : AppCompatActivity() {
     }
 
     private fun initRvCard() {
-        var listItemCard: MutableList<ItemCard> = ArrayList()
+        val listItemCard: MutableList<ItemCard> = ArrayList()
         rvCard.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
         mCardAdapter = CardAdapter(listItemCard)
         rvCard.adapter = mCardAdapter

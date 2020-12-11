@@ -6,6 +6,7 @@
     tools:context=".HomePageActivity">
 
     <androidx.recyclerview.widget.RecyclerView
+        android:overScrollMode="never"
         android:id="@+id/rvCard"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

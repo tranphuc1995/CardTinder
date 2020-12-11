@@ -11,21 +11,20 @@ import com.tranphuc.domain.repository.PersonRepository
 
 
 class PersonRepositoryImpl(
-    val personService: PersonService,
-    val personApiToPerson: PersonApiToPerson,
-    val appDatabase: AppDatabase,
-    val personEntityToPerson: PersonEntityToPerson
+    private val personService: PersonService,
+    private val personApiToPerson: PersonApiToPerson,
+    private val appDatabase: AppDatabase,
+    private val personEntityToPerson: PersonEntityToPerson
 ) :
     PersonRepository {
     override suspend fun getPersonFromRemote(): Person {
         /*  for simplicity, if request is in case "ServerError" , "NetworkError" , "UnknownError"
         i will return an obeject with default constructor */
         var person = Person()
-        var response = personService.getPerson()
-        when (response) {
+        when (val response = personService.getPerson()) {
             is NetworkResponse.Success -> {
                 if (response.body.listResult?.size ?: 0 > 0) {
-                    var personApi = response.body.listResult?.get(0)?.personApi
+                    val personApi = response.body.listResult?.get(0)?.personApi
                     person = personApiToPerson.map(personApi)
                 }
             }
@@ -58,8 +57,7 @@ class PersonRepositoryImpl(
     }
 
     override suspend fun getListPersonFromRoom(): List<Person> {
-        var listPersonEntity = appDatabase.personDAO().getAllPersonEntity()
-        var listPerson = listPersonEntity.map { personEntity -> personEntityToPerson.map(personEntity) }
-        return listPerson
+        val listPersonEntity = appDatabase.personDAO().getAllPersonEntity()
+        return listPersonEntity.map { personEntity -> personEntityToPerson.map(personEntity) }
     }
 }

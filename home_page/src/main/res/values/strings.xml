@@ -7,4 +7,5 @@
     <string name="description_icon">Show icon information</string>
     <string name="demo">Demo</string>
     <string name="loading">Loading…</string>
+    <string name="no_data">No data</string>
 </resources>

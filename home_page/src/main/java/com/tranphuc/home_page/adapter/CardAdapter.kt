@@ -14,31 +14,39 @@ import com.tranphuc.home_page.model.ItemPerson
 import com.tranphuc.home_page.utils.DateUtils
 import kotlinx.android.synthetic.main.item_card.view.*
 
-class CardAdapter(var listItemCard: MutableList<ItemCard>) :
+class CardAdapter(private var listItemCard: MutableList<ItemCard>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
-        val TYPE_LOADING = 0
-        val TYPE_ITEM_CARD = 1
+        const val TYPE_LOADING = 0
+        const val TYPE_ITEM_CARD = 1
+        const val TYPE_NO_DATA = 2
     }
 
     override fun getItemViewType(position: Int): Int {
-        return listItemCard.get(position).type
+        return listItemCard[position].type
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         when (viewType) {
             TYPE_ITEM_CARD -> {
-                var view =
+                val view =
                     LayoutInflater.from(viewGroup.context)
                         .inflate(R.layout.item_card, viewGroup, false)
                 return CardViewHolder(view)
             }
+
+            TYPE_NO_DATA -> {
+                val view =
+                    LayoutInflater.from(viewGroup.context)
+                        .inflate(R.layout.item_no_data, viewGroup, false)
+                return CardViewHolder(view)
+            }
             else -> {
-                var view =
+                val view =
                     LayoutInflater.from(viewGroup.context)
                         .inflate(R.layout.item_loading, viewGroup, false)
-                return LoadingViewHolder(view)
+                return CardViewHolder(view)
             }
         }
     }
@@ -46,7 +54,7 @@ class CardAdapter(var listItemCard: MutableList<ItemCard>) :
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
         when (viewHolder.itemViewType) {
             TYPE_ITEM_CARD -> {
-                (viewHolder as? CardViewHolder)?.bindData(listItemCard.get(position).itemPerson)
+                (viewHolder as? CardViewHolder)?.bindData(listItemCard[position].itemPerson)
             }
         }
     }
@@ -58,7 +66,7 @@ class CardAdapter(var listItemCard: MutableList<ItemCard>) :
 
     class CardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        // detech previous clicking icon.
+        // detect previous clicking icon.
         private var mPositionOfLastIconClick = 0
 
         fun bindData(itemPerson: ItemPerson) {
@@ -83,7 +91,8 @@ class CardAdapter(var listItemCard: MutableList<ItemCard>) :
                 1 -> {
                     itemView.tvFirstContent.text =
                         itemView.context.resources.getString(R.string.my_birthday_is)
-                    itemView.tvSecondContent.text = DateUtils.formatLongToDate(itemPerson.birthDay * 1000)
+                    itemView.tvSecondContent.text =
+                        DateUtils.formatLongToDate(itemPerson.birthDay * 1000)
                 }
                 2 -> {
                     itemView.tvFirstContent.text =
@@ -101,7 +110,7 @@ class CardAdapter(var listItemCard: MutableList<ItemCard>) :
         private fun bindListIcon(positionActiveIcon: Int, itemPerson: ItemPerson) {
             itemView.lnListIcon.removeAllViews()
             itemPerson.listIcon.forEachIndexed { index, itemIcon ->
-                var ivIcon = LayoutInflater.from(itemView.context)
+                val ivIcon = LayoutInflater.from(itemView.context)
                     .inflate(R.layout.item_icon, itemView.lnListIcon, false) as ImageView
 
                 if (positionActiveIcon == index) {
@@ -115,12 +124,12 @@ class CardAdapter(var listItemCard: MutableList<ItemCard>) :
                 ivIcon.setOnClickListener {
                     if (index != mPositionOfLastIconClick) {
                         // rebind text
-                        bindText(index,itemPerson)
+                        bindText(index, itemPerson)
 
                         // load icon not active for before icon
                         Glide.with(itemView.context)
-                            .load(itemPerson.listIcon.get(mPositionOfLastIconClick).iconNotActive)
-                            .into(itemView.lnListIcon.get(mPositionOfLastIconClick) as ImageView)
+                            .load(itemPerson.listIcon[mPositionOfLastIconClick].iconNotActive)
+                            .into(itemView.lnListIcon[mPositionOfLastIconClick] as ImageView)
 
                         // load icon active for current icon
                         Glide.with(itemView.context).load(itemIcon.iconActive).into(ivIcon)
@@ -131,10 +140,6 @@ class CardAdapter(var listItemCard: MutableList<ItemCard>) :
                 }
             }
         }
-    }
-
-    class LoadingViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
     }
 
     fun updateList(listItemCardNew: List<ItemCard>) {

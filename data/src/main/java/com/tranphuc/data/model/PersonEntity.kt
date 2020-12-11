@@ -13,5 +13,4 @@ class PersonEntity(
     var location: String = "",
     var phone: String = "",
     var dob: Long = 0L
-)  {
-}
+)

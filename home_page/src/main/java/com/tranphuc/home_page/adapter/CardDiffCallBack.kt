@@ -18,7 +18,7 @@ class CardDiffCallBack(
     }
 
     override fun areContentsTheSame(oldPosition: Int, newPosition: Int): Boolean {
-        return oldList.get(oldPosition).itemPerson.id == newList.get(newPosition).itemPerson.id
+        return oldList[oldPosition].itemPerson.id == newList[newPosition].itemPerson.id
     }
 
     @Nullable

@@ -20,7 +20,7 @@ class PersonToItemPerson {
     }
 
     private fun createListIconBottom(): MutableList<ItemIcon> {
-        var listIcon: MutableList<ItemIcon> = ArrayList()
+        val listIcon: MutableList<ItemIcon> = ArrayList()
         for (i in (0..3)) {
             when (i) {
                 0 -> {

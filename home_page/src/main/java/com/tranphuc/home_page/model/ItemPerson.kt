@@ -8,5 +8,4 @@ data class ItemPerson(
     var phone: String = "",
     var avatar: String = "",
     var listIcon: MutableList<ItemIcon> = ArrayList()
-) {
-}
+)

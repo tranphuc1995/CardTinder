@@ -7,5 +7,4 @@ data class Person(
     var address: String = "",
     var phone: String = "",
     var avatar: String = ""
-) {
-}
+)

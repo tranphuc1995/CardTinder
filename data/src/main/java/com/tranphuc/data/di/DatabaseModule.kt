@@ -1,11 +1,9 @@
 package com.tranphuc.data.di
 
 
-import android.app.Application
 import android.content.Context
 import androidx.room.Room
 import com.tranphuc.data.database.AppDatabase
-import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.Module
 import org.koin.dsl.module
