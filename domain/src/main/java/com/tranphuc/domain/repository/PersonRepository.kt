@@ -5,7 +5,7 @@ import com.tranphuc.domain.model.Person
 interface PersonRepository {
     suspend fun getPersonFromRemote(): Person
 
-    suspend fun savePersonToRealm(
+    suspend fun savePersonToRoom(
         id: String,
         avatar: String,
         name: String,

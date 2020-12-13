@@ -11,6 +11,6 @@ class SavePersonToRoomUsecase(private val personRepository: PersonRepository) {
         phone: String,
         dob: Long
     ) {
-        return personRepository.savePersonToRealm(id, avatar, name, location, phone, dob)
+        personRepository.savePersonToRoom(id, avatar, name, location, phone, dob)
     }
 }

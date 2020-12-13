@@ -13,4 +13,8 @@ interface PersonDAO {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertPersonEntity(personEntity: PersonEntity)
+
+    // use for unit test
+    @Query("DELETE FROM personentity")
+    fun deleteAllRecordPersonEntity()
 }

@@ -41,7 +41,7 @@ class PersonRepositoryImpl(
         return person
     }
 
-    override suspend fun savePersonToRealm(
+    override suspend fun savePersonToRoom(
         id: String,
         avatar: String,
         name: String,
